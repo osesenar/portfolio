@@ -4,7 +4,7 @@
    as you like and adjust the length below to match.
 ================================================================= */
 function getImageList() {
-  return Array.from({ length: 18 }, (_, i) =>
+  return Array.from({ length: 15 }, (_, i) =>
     `images/${String(i + 1).padStart(2, "0")}.jpg`
   );
 }
@@ -26,6 +26,24 @@ function fitNameWidth() {
   const extra = (target - natural) / gaps;
   // never let letters overlap, even on very narrow screens
   nameHeading.style.letterSpacing = `${Math.max(extra, 0)}px`;
+}
+
+/* =================================================================
+   CONTACT
+   Split into parts and joined only at runtime, so a bot scraping the
+   raw HTML/JS source doesn't find a ready-to-use "you@domain.com"
+   string sitting in plain text. This won't stop every scraper, but it
+   filters out the simple ones that just regex the page source.
+   Replace the two parts below with your own address.
+================================================================= */
+const EMAIL_USER = "osesenar";
+const EMAIL_DOMAIN = "gmail.com";
+
+function initContactLink() {
+  const link = document.getElementById("contactLink");
+  const address = `${EMAIL_USER}@${EMAIL_DOMAIN}`;
+  link.href = `mailto:${address}`;
+  link.setAttribute("aria-label", `Email ${address}`);
 }
 
 /* =================================================================
@@ -299,4 +317,5 @@ window.addEventListener("resize", () => {
 preloadAll();
 stageImg.src = photos[currentIndex];
 fitNameWidth();
+initContactLink();
 scheduleAutoplay();
