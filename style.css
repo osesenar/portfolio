@@ -1,0 +1,243 @@
+/* ---------------------------------------------
+   Tokens
+--------------------------------------------- */
+:root {
+  --bg: #ffffff;
+  --ink: #161412;
+  --margin: clamp(5px, 4vw, 20px);
+  --margin-half: calc(var(--margin) / 2);
+  --grid-gap: clamp(10px, 1.8vw, 28px);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Urbanist', sans-serif;
+  display: flex;
+  flex-direction: column;
+  padding: var(--margin-half) var(--margin) var(--margin);
+  overflow: hidden;
+}
+
+/* ---------------------------------------------
+   Name
+--------------------------------------------- */
+.name-wrap {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.name {
+  display: inline-block;
+  margin: 0;
+  font-weight: 100;
+  font-size: clamp(20px, 6vw, 56px);
+  line-height: 1.1;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* ---------------------------------------------
+   View stack — focus and grid share the same area
+--------------------------------------------- */
+.view-stack {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: var(--margin-half);
+}
+
+.focus-view,
+.grid-view {
+  position: absolute;
+  inset: 0;
+}
+
+.focus-view {
+  z-index: 2;
+}
+
+.focus-view.is-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.grid-view {
+  z-index: 1;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--bg);
+  display: flex;
+  align-items: stretch;
+  gap: var(--margin);
+  padding: var(--margin);
+  overflow-y: auto;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* older Edge/IE */
+}
+
+.grid-view::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
+
+.grid-view.is-active {
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 3;
+}
+
+/* ---------------------------------------------
+   Focus mask
+--------------------------------------------- */
+.mask {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.stage-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.curtain {
+  position: absolute;
+  background: var(--bg);
+  z-index: 5;
+}
+.curtain.sides { top: 0; bottom: 0; width: 0; }
+.curtain-a.sides { left: 0; }
+.curtain-b.sides { right: 0; }
+.curtain.vertical { left: 0; right: 0; height: 0; }
+.curtain-a.vertical { top: 0; }
+.curtain-b.vertical { bottom: 0; }
+
+.click-zones {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: 10;
+}
+.zone {
+  flex: 1;
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------
+   Grid-view text block (email, bio, copyright)
+--------------------------------------------- */
+.grid-text {
+  flex: 0 0 clamp(180px, 22vw, 320px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.grid-email {
+  margin: 0;
+  font-size: clamp(13px, 1.1vw, 16px);
+}
+
+.grid-bio {
+  margin: 0;
+  font-size: clamp(13px, 1.1vw, 16px);
+  line-height: 1.5;
+  max-width: 34ch;
+}
+
+.grid-copyright {
+  margin: 0;
+  font-size: clamp(11px, 0.9vw, 13px);
+  opacity: 0.55;
+}
+
+.grid-copyright-name {
+  font-weight: 300;
+}
+
+@media (max-width: 700px) {
+  .grid-view {
+    flex-direction: column;
+  }
+  .grid-text {
+    flex: 0 0 auto;
+    justify-content: flex-start;
+  }
+}
+
+/* ---------------------------------------------
+   Grid
+--------------------------------------------- */
+.grid {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--grid-gap);
+  align-items: center;
+  align-content: start;
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(6, 1fr); }
+}
+@media (max-width: 800px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 500px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.grid-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.grid-cell img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grid-cell .curtain {
+  z-index: 2;
+}
+
+/* ---------------------------------------------
+   Flying clone (used during focus <-> grid transitions)
+--------------------------------------------- */
+.flying-clone {
+  position: fixed;
+  object-fit: cover;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------
+   Reduced motion
+--------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .curtain,
+  .flying-clone {
+    transition: none !important;
+  }
+}
