@@ -4,7 +4,7 @@
    as you like and adjust the length below to match.
 ================================================================= */
 function getImageList() {
-  return Array.from({ length: 15 }, (_, i) =>
+  return Array.from({ length: 21 }, (_, i) =>
     `images/${String(i + 1).padStart(2, "0")}.jpg`
   );
 }
